@@ -71,7 +71,12 @@
 	<h2>Base64 File Encoder</h2>
 	<h4>Drop Files here</h4>
 	<div id="dropper"></div>
+
+
 	<div id="results"></div>
+
+
+
 	<script>
 		if (typeof window.FileReader === 'undefined')
 			alert('File API & FileReader not supported');
@@ -79,18 +84,32 @@
 		var dropper = document.getElementById("dropper");
 		var results = document.getElementById("results");
 
+
 		dropper.ondragenter = function (e) {
+			e.stopPropagation();
+			e.preventDefault();
 			dropper.className = 'hover';
-			e.preventDefault();
 		};
+
+
 		dropper.ondragover = function (e) {
+			e.stopPropagation();
 			e.preventDefault();
 		};
+
+
 		dropper.ondragleave = function (e) {
-			dropper.className = '';
+			e.stopPropagation();
 			e.preventDefault();
+			dropper.className = '';
 		};
+
+		
 		dropper.ondrop = function (e) {
+
+			e.stopPropagation();
+			e.preventDefault();
+
 			var files = [].slice.call(e.dataTransfer.files);
 			files.forEach(function (file) {
 				var reader = new FileReader();
@@ -100,8 +119,10 @@
 				reader.readAsDataURL(file);
 			});
 			dropper.className = '';
-			e.preventDefault();
+			
 		};
+
+		
 
 		function fileLoaded(filename, dataUri) {
 
