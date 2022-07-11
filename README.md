@@ -1,6 +1,4 @@
-Base64 Encoder
-==============
+Data URL Encoder
+================
 
-Running live here:
-
-http://jpillora.com/base64-encoder/
+This is a fork of http://jpillora.com/base64-encoder/ and has been writtern from the ground up.
