@@ -10,7 +10,8 @@
 		body { width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 65px; box-sizing: border-box; gap: 24px; }
 		#gh_badge { position: fixed; top: 0; left: 0; }
 
-		#upload_results{ height: 128px; background-color: rgb(61, 61, 61); border-radius: 18px; }
+		#upload_results{ height: 128px; background-color: rgb(61, 61, 61); border-radius: 18px; color: white; }
+		#upload_results p{ font-size: 10pt; overflow-wrap: break-word; overflow: hidden; }
 
 		#file_input{ flex: 1; background-color: #cecece; border-radius: 18px; }
 
@@ -94,16 +95,8 @@
 	</svg>
 
 	<section id="upload_results" >
-
+		<p id="upload_data_url" ></p>
 	</section>
-	<!-- <h2>Base64 File Encoder</h2>
-	<h4>Drop Files here</h4>
-	<div id="dropper"></div> -->
-
-
-	<!-- <div id="results"></div> -->
-
-
 
 	<script>
 		if (typeof window.FileReader === 'undefined')
@@ -146,85 +139,34 @@
 			e.stopPropagation();
 			e.preventDefault();
 
-			console.log(e.dataTransfer.files.length);
-
 			dropBox.classList.remove("dropbox_border_hover");
+
+			if(e.dataTransfer.files.length > 0){
+
+				const file = e.dataTransfer.files[0];
+				uploadFile(file);
+
+			}
 
 		});
 
-		
-		/*
-		dropper.ondrop = function (e) {
-
-			e.stopPropagation();
-			e.preventDefault();
 
 
-			// const data = e.dataTransfer.items[0];
+		function uploadFile(file){
 
-			// console.log(e);
-			console.log(e.dataTransfer.files[0]);
+			const reader = new FileReader();
 
+			reader.onload = _ => {
 
+				document.querySelector("#upload_data_url").textContent = reader.result;
 
-			// var files = [].slice.call(e.dataTransfer.files);
-			// files.forEach(function (file) {
-			// 	var reader = new FileReader();
-			// 	reader.onload = function (event) {
-			// 		fileLoaded(file.name, event.target.result);
-			// 	};
-			// 	reader.readAsDataURL(file);
-			// });
-			// dropper.className = '';
-			
-		};
-
-		*/
-		
-
-		function fileLoaded(filename, dataUri) {
-
-			var div = document.createElement("div");
-			div.className = 'item';
-
-			var remove = document.createElement("button");
-			remove.className = 'remove';
-			remove.innerHTML = 'x';
-			remove.onclick = function () {
-				if (localStorage) localStorage.removeItem("b64-" + filename);
-				results.removeChild(div);
 			};
-			div.appendChild(remove);
 
-			var name = document.createElement("div");
-			name.innerHTML = filename;
-			div.appendChild(name);
+			reader.readAsDataURL(file);
 
-			if (/^data:image/.test(dataUri)) {
-				var imgDiv = document.createElement("div");
-				var img = document.createElement("img");
-				img.src = dataUri;
-				img.style['max-width'] = '100px';
-				img.style['height-width'] = '100px';
-				imgDiv.appendChild(img);
-				div.appendChild(imgDiv);
-			}
-
-			var ta = document.createElement("textarea");
-			ta.onclick = function () {
-				ta.select();
-			};
-			ta.value = dataUri;
-			div.appendChild(ta);
-
-			results.appendChild(div);
-			if (localStorage) localStorage.setItem("b64-" + filename, dataUri);
 		}
 
-		if (localStorage)
-			for (var filename in localStorage)
-				if (filename.indexOf("b64-") === 0)
-					fileLoaded(filename.replace("b64-", ""), localStorage.getItem(filename));
+
 	</script>
 </body>
 
