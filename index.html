@@ -10,8 +10,9 @@
 		body { width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 65px; box-sizing: border-box; gap: 24px; }
 		#gh_badge { position: fixed; top: 0; left: 0; }
 
-		#upload_results{ height: 128px; background-color: rgb(61, 61, 61); border-radius: 18px; color: white; }
-		#upload_results p{ font-size: 10pt; overflow-wrap: break-word; overflow: hidden; }
+		#upload_results{ overflow: hidden; padding: 24px; height: 128px; box-sizing: border-box; background-color: rgb(61, 61, 61); border-radius: 18px; display: flex; gap: 24px; align-items: center; }
+		#upload_results p{ flex: 1; font-size: 10pt;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: white; }
+		#upload_results a{ width: 32px; height: 32px; cursor: pointer; background: url("copy.svg") no-repeat center; }
 
 		#file_input{ flex: 1; background-color: #cecece; border-radius: 18px; }
 
@@ -96,16 +97,27 @@
 
 	<section id="upload_results" >
 		<p id="upload_data_url" ></p>
+		<a id="upload_data_cpy" ></a>
 	</section>
 
 	<script>
-		if (typeof window.FileReader === 'undefined')
-			alert('File API & FileReader not supported');
+
+		let data_url = ""
+
+		// Copy data URL to clipboard
+		document.querySelector("#upload_data_cpy").addEventListener("click", e => {
+			// TODO check if not empty
+			const clipboard = navigator.clipboard;
+			clipboard
+				.writeText(data_url)
+				.then(_ => console.log("Copied data URL"));
+			e.preventDefault();
+		});
+
+
 
 		var dropper = document.querySelector("#file_input");
-
 		var results = document.getElementById("results");
-
 		const dropBox = document.querySelector("#drop_box");
 
 		dropper.addEventListener("dragenter", e => {
@@ -118,13 +130,11 @@
 
 		}, false);
 
-
 		dropper.addEventListener("dragover", e => {
 			e.stopPropagation();
 			e.preventDefault();
 		});
 
-		
 		dropper.addEventListener("dragleave", e => {
 			
 			e.stopPropagation();
@@ -132,7 +142,6 @@
 			dropBox.classList.remove("dropbox_border_hover");
 
 		});
-
 
 		dropper.addEventListener("drop", e => {
 
@@ -150,18 +159,13 @@
 
 		});
 
-
-
 		function uploadFile(file){
 
 			const reader = new FileReader();
-
 			reader.onload = _ => {
-
-				document.querySelector("#upload_data_url").textContent = reader.result;
-
+				data_url = reader.result;
+				document.querySelector("#upload_data_url").textContent = data_url;
 			};
-
 			reader.readAsDataURL(file);
 
 		}
