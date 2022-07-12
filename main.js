@@ -49,12 +49,16 @@ dropper.addEventListener("drop", e => {
     dropBox.classList.remove("dropbox_border_hover");
 
     if(e.dataTransfer.files.length > 0){
-
         const file = e.dataTransfer.files[0];
         uploadFile(file);
-
     }
 
+});
+
+const file_picker_field = document.querySelector("#file_picker_feild");
+file_picker_field.addEventListener("change", _ => {
+    const file = file_picker_field.files[0];
+    uploadFile(file);
 });
 
 function uploadFile(file){
